@@ -1,0 +1,73 @@
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #0f172a;
+    color: #fff;
+}
+.subtitle { margin: 6px 0 0; color: #cbd5e1; }
+.container { max-width: 1100px; margin: 20px auto; padding: 0 16px 24px; }
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+}
+.small-card { max-width: 500px; margin: 0 auto; }
+.form-grid, .filter-grid { display: grid; gap: 8px; }
+.filter-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    align-items: center;
+}
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+.btn {
+    width: fit-content;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #2563eb;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+.btn-secondary { background: #475569; }
+.btn-danger { background: #dc2626; }
+.btn-small { padding: 6px 10px; font-size: 13px; }
+.inline-form { display: flex; gap: 8px; align-items: center; }
+.action-row { margin-top: 8px; display: flex; gap: 8px; align-items: center; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #e5e7eb; text-align: left; padding: 10px; vertical-align: top; }
+.flash-list {
+    list-style: none;
+    padding: 10px;
+    margin: 0 0 14px;
+    background: #e0f2fe;
+    border: 1px solid #7dd3fc;
+    border-radius: 8px;
+}
+.muted { color: #4b5563; }
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 12px;
+}
+.status-open { background: #ef4444; }
+.status-in-progress { background: #f59e0b; }
+.status-resolved { background: #16a34a; }
+.activity-list, .credential-list { margin: 0; padding-left: 18px; }

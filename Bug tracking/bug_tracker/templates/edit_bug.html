@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2>Edit Bug #{{ bug.id }}</h2>
+    <form method="post" action="{{ url_for('bugs.edit_bug', bug_id=bug.id) }}" class="form-grid">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" value="{{ bug.title }}" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" required>{{ bug.description }}</textarea>
+
+        <label for="priority">Priority</label>
+        <select id="priority" name="priority" required>
+            <option value="Low" {% if bug.priority == "Low" %}selected{% endif %}>Low</option>
+            <option value="Medium" {% if bug.priority == "Medium" %}selected{% endif %}>Medium</option>
+            <option value="High" {% if bug.priority == "High" %}selected{% endif %}>High</option>
+            <option value="Critical" {% if bug.priority == "Critical" %}selected{% endif %}>Critical</option>
+        </select>
+
+        <label for="assignee_id">Assign To</label>
+        <select id="assignee_id" name="assignee_id">
+            <option value="">Unassigned</option>
+            {% for user in users %}
+            <option value="{{ user.id }}" {% if bug.assignee_id == user.id %}selected{% endif %}>
+                {{ user.username }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <div class="action-row">
+            <button class="btn" type="submit">Save Changes</button>
+            <a class="btn btn-secondary" href="{{ url_for('bugs.dashboard') }}">Back</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

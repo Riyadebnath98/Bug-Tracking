@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else "Bug Tracker" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div>
+            <h1>Bug Tracking System</h1>
+            {% if session.get('username') %}
+            <p class="subtitle">Logged in as {{ session.get('username') }} ({{ session.get('role') }})</p>
+            {% endif %}
+        </div>
+        {% if session.get('username') %}
+        <form method="post" action="{{ url_for('auth.logout') }}">
+            <button class="btn btn-secondary" type="submit">Logout</button>
+        </form>
+        {% endif %}
+    </header>
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-list">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

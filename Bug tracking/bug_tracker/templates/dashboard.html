@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2>Create Bug</h2>
+    <form method="post" action="{{ url_for('bugs.create_bug') }}" class="form-grid">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="3" required></textarea>
+
+        <label for="priority">Priority</label>
+        <select id="priority" name="priority" required>
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+        </select>
+
+        <label for="assignee_id">Assign To</label>
+        <select id="assignee_id" name="assignee_id">
+            <option value="">Unassigned</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }} ({{ user.role }})</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn" type="submit">Create Bug</button>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Search & Filter</h2>
+    <form method="get" action="{{ url_for('bugs.dashboard') }}" class="filter-grid">
+        <input type="text" name="q" value="{{ filters.q }}" placeholder="Search title or description">
+        <select name="status">
+            <option value="">All Status</option>
+            <option value="Open" {% if filters.status == "Open" %}selected{% endif %}>Open</option>
+            <option value="In Progress" {% if filters.status == "In Progress" %}selected{% endif %}>In Progress</option>
+            <option value="Resolved" {% if filters.status == "Resolved" %}selected{% endif %}>Resolved</option>
+        </select>
+        <select name="priority">
+            <option value="">All Priority</option>
+            <option value="Low" {% if filters.priority == "Low" %}selected{% endif %}>Low</option>
+            <option value="Medium" {% if filters.priority == "Medium" %}selected{% endif %}>Medium</option>
+            <option value="High" {% if filters.priority == "High" %}selected{% endif %}>High</option>
+            <option value="Critical" {% if filters.priority == "Critical" %}selected{% endif %}>Critical</option>
+        </select>
+        <input type="text" name="assignee" value="{{ filters.assignee }}" placeholder="Assignee username">
+        <button class="btn btn-small" type="submit">Apply</button>
+        <a class="btn btn-secondary btn-small" href="{{ url_for('bugs.dashboard') }}">Reset</a>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Bug List</h2>
+    {% if bugs %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Assignee</th>
+                <th>Created By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bug in bugs %}
+            <tr>
+                <td>{{ bug.id }}</td>
+                <td>
+                    <strong>{{ bug.title }}</strong><br>
+                    <small>{{ bug.description }}</small>
+                </td>
+                <td>{{ bug.priority }}</td>
+                <td><span class="status status-{{ bug.status|replace(' ', '-')|lower }}">{{ bug.status }}</span></td>
+                <td>{{ bug.assignee_name if bug.assignee_name else "Unassigned" }}</td>
+                <td>{{ bug.created_by_name }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('bugs.update_bug_status', bug_id=bug.id) }}" class="inline-form">
+                        <select name="status">
+                            <option value="Open" {% if bug.status == "Open" %}selected{% endif %}>Open</option>
+                            <option value="In Progress" {% if bug.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                            <option value="Resolved" {% if bug.status == "Resolved" %}selected{% endif %}>Resolved</option>
+                        </select>
+                        <button class="btn btn-small" type="submit">Update</button>
+                    </form>
+                    <div class="action-row">
+                        <a class="btn btn-small" href="{{ url_for('bugs.edit_bug', bug_id=bug.id) }}">Edit</a>
+                        <form method="post" action="{{ url_for('bugs.delete_bug', bug_id=bug.id) }}" onsubmit="return confirm('Delete this bug?')">
+                            <button class="btn btn-danger btn-small" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No bugs found for selected filters.</p>
+    {% endif %}
+</section>
+
+<section class="card">
+    <h2>Status Update Notifications</h2>
+    {% if notifications %}
+    <ul class="activity-list">
+        {% for item in notifications %}
+        <li><strong>Bug #{{ item.bug_id }}</strong> - {{ item.message }} <span class="muted">({{ item.created_at }})</span></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No activity yet.</p>
+    {% endif %}
+</section>
+{% endblock %}
